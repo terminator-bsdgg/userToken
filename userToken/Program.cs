@@ -12,14 +12,67 @@ namespace userToken
     {
         static void Main(string[] args)
         {
-            //IntPtr accountToken = WindowsIdentity.GetCurrent().Token;
+            //windowsIdentityDemo();
+            //Console.WriteLine();
 
-            // accountToken entspricht logonToken
+            Console.WriteLine("Load WindowsIdentity token -- Press Enter");
+            Console.ReadKey();
+            IntPtr accountToken = getCurrentUserToken();
+            Console.WriteLine(accountToken);
+            Console.WriteLine();
+
+            Console.WriteLine("Load user name from WindowsIdentity token -- Press Enter");
+            Console.ReadKey();
+            // https://csharp.hotexamples.com/de/examples/-/WindowsIdentity/-/php-windowsidentity-class-examples.html
+            WindowsIdentity identity = getUserIdentity(accountToken);
+            //identity.Impersonate();
+            Console.WriteLine(identity.Name);
+            Console.WriteLine();
+
             
+
+            string url = "http://localhost:3030/echo.php?echo=";
+            Console.WriteLine("Send WindowsIdentity token to " + url + accountToken + " -- (Press Enter)");
+            Console.ReadKey();
+            openUrl(url, accountToken);
+        }
+
+        static WindowsIdentity getUserIdentity(IntPtr accountToken)
+        {
+            return new WindowsIdentity(accountToken);
+        }
+
+        static IntPtr getCurrentUserToken()
+        {
+            return WindowsIdentity.GetCurrent().Token;
+        }
+
+        static void openUrl(string url, IntPtr data)
+        {
+            string target = url + data;
+            try
+            {
+                System.Diagnostics.Process.Start(target);
+            }
+            catch (System.ComponentModel.Win32Exception noBrowser)
+            {
+                if (noBrowser.ErrorCode == -2147467259)
+                    MessageBox.Show(noBrowser.Message);
+            }
+            catch (System.Exception other)
+            {
+                MessageBox.Show(other.Message);
+            }
+        }
+
+        static void windowsIdentityDemo()
+        {
+            // !!!! accountToken entspricht logonToken
             // https://docs.microsoft.com/de-de/dotnet/api/system.security.principal.windowsidentity?view=net-6.0
             // Retrieve the Windows account token for the current user.
             Console.WriteLine("-----------------Logon------------------------------");
             IntPtr logonToken = WindowsIdentityMembers.LogonUser();
+
             // Constructor implementations.
             Console.WriteLine("-----------------Constructor------------------------");
             WindowsIdentityMembers.IntPtrConstructor(logonToken);
@@ -39,29 +92,9 @@ namespace userToken
             WindowsIdentityMembers.GetAnonymousUser();
             Console.WriteLine("-----------------ImpersonateIdentity----------------");
             WindowsIdentityMembers.ImpersonateIdentity(logonToken);
-            
+
             Console.WriteLine("This sample completed successfully; " +
                 "press Enter to exit.");
-            
-            Console.WriteLine("-----------------Open Browser-----------------------");
-            Console.ReadLine();
-
-           
-            
-            string target = "http://localhost:3030/echo.php?echo=" + logonToken + "";
-            try
-            {
-                System.Diagnostics.Process.Start(target);
-            }
-            catch (System.ComponentModel.Win32Exception noBrowser)
-            {
-                if (noBrowser.ErrorCode == -2147467259)
-                    MessageBox.Show(noBrowser.Message);
-            }
-            catch (System.Exception other)
-            {
-                MessageBox.Show(other.Message);
-            }
         }
     }
 }
