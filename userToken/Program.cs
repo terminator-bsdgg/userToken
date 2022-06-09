@@ -21,18 +21,31 @@ namespace userToken
             Console.WriteLine(accountToken);
             Console.WriteLine();
 
-            Console.WriteLine("Load user name from WindowsIdentity token -- Press Enter");
+            Console.WriteLine("Load user data from WindowsIdentity token -- Press Enter");
             Console.ReadKey();
             // https://csharp.hotexamples.com/de/examples/-/WindowsIdentity/-/php-windowsidentity-class-examples.html
             WindowsIdentity identity = getUserIdentity(accountToken);
             //identity.Impersonate();
+            Console.WriteLine("Name:");
             Console.WriteLine(identity.Name);
+            Console.WriteLine("Label:");
+            Console.WriteLine(identity.Label);
+            Console.WriteLine("User:");
+            Console.WriteLine(identity.User);
+            Console.WriteLine("Owner:");
+            Console.WriteLine(identity.Owner);
+            Console.WriteLine("AccessToken:");
+            Console.WriteLine(identity.AccessToken);
+            Console.WriteLine("Actor:");
+            Console.WriteLine(identity.Actor);
+            Console.WriteLine("Token:");
+            Console.WriteLine(identity.Token);
             Console.WriteLine();
 
             
 
             string url = "http://localhost:3030/echo.php?echo=";
-            Console.WriteLine("Send WindowsIdentity token to " + url + accountToken + " -- (Press Enter)");
+            Console.WriteLine("Send WindowsIdentity token to " + url + identity + " -- (Press Enter)");
             Console.ReadKey();
             openUrl(url, accountToken);
         }
