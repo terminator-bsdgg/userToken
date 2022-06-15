@@ -78,5 +78,5 @@ try {
 }
 ```
 ## Autoren
-* **Kevin Müller** - [Profile]()
+* **Kevin Müller** - [Profile](https://github.com/hydrokevin)
 * **Milan Kovacevic** - [GitHub](https://github.com/miko41)
